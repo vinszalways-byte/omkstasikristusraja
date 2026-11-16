@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMK Gereja Katolik Kristus Raja</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- QRCode.js for crisp dynamic QRIS generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Tone.js untuk alunan melodi instrumental rohani lembut bawaan -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .hero-bg {
+            background-image: url('626673.jpg');
+            background-size: cover;
+            background-position: center 22%;
+            background-attachment: scroll;
+        }
+        @media (min-width: 768px) {
+            .hero-bg {
+                background-attachment: fixed;
+            }
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        .animate-pulse-soft {
+            animation: pulse-soft 2.5s infinite ease-in-out;
+        }
+        @keyframes eq-bar {
+            0%, 100% { height: 4px; }
+            50% { height: 16px; }
+        }
+        .eq-playing span:nth-child(1) { animation: eq-bar 0.7s infinite ease-in-out; }
+        .eq-playing span:nth-child(2) { animation: eq-bar 0.5s infinite ease-in-out 0.15s; }
+        .eq-playing span:nth-child(3) { animation: eq-bar 0.8s infinite ease-in-out 0.3s; }
+        .eq-playing span:nth-child(4) { animation: eq-bar 0.6s infinite ease-in-out 0.1s; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-amber-500 selection:text-white">
+
+    <!-- ===================================================================== -->
+    <!-- TOAST NOTIFICATION                                                    -->
+    <!-- ===================================================================== -->
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 max-w-xs sm:max-w-sm pointer-events-none"></div>
+
+    <!-- ===================================================================== -->
+    <!-- TOP NAVIGATION BAR (MOBILE-FIRST RESPONSIVE)                          -->
+    <!-- ===================================================================== -->
+    <header class="fixed top-0 inset-x-0 z-50 bg-slate-950/75 backdrop-blur-md border-b border-white/10 text-white transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo & Brand -->
+            <a href="#beranda" class="flex items-center gap-2.5 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-extrabold shadow-lg shadow-amber-500/20">
+                    ✝
+                </div>
+                <div class="leading-tight">
+                    <span class="block font-bold text-sm sm:text-base tracking-tight text-white">OMK Kristus Raja</span>
+                    <span class="block text-[11px] text-amber-300/90 font-medium">Orang Muda Katolik</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-200">
+                <a href="#tentang" class="hover:text-amber-400 transition">Tentang OMK</a>
+                <a href="#project" class="hover:text-amber-400 transition">Project & Donasi</a>
+                <a href="#album" class="hover:text-amber-400 transition">Album Kegiatan</a>
+                <a href="#pengurus" class="hover:text-amber-400 transition">Kontak Pengurus</a>
+                <a href="#lokasi" class="hover:text-amber-400 transition">Lokasi</a>
+                <a href="#saran" class="hover:text-amber-400 transition">Saran & Kritik</a>
+            </nav>
+
+            <!-- Action Controls (Mode Pengurus via HP + Mobile Menu Toggle) -->
+            <div class="flex items-center gap-2">
+                <button id="admin-toggle-btn" onclick="handleAdminButtonClick()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs sm:text-sm font-semibold text-amber-300 transition">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    <span id="admin-btn-label">Mode Edit</span>
+                </button>
+
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white" aria-label="Buka Menu">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-900/95 backdrop-blur-xl border-b border-white/10 px-4 pt-2 pb-5 space-y-1">
+            <a href="#tentang" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/10">Tentang OMK</a>
+            <a href="#project" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/10">Project & Donasi QRIS</a>
+            <a href="#album" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/10">Album Dokumentasi</a>
+            <a href="#pengurus" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/10">Kontak Ketua, Sekretariat & Bendahara</a>
+            <a href="#lokasi" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/10">Lokasi Gereja</a>
+            <a href="#saran" onclick="closeMobileMenu()" class="block px-3 py-2.5 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/10">Saran & Kritik (Inbox)</a>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- ADMIN ACTIVE BANNER (Muncul saat Pengurus login di HP)                -->
+    <!-- ===================================================================== -->
+    <div id="admin-active-bar" class="hidden fixed top-16 inset-x-0 z-40 bg-amber-500 text-slate-950 px-4 py-2 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-bold">
+            <div class="flex items-center gap-2">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span>Mode Pengurus Aktif — Anda dapat mengubah foto, lagu, project, kontak & membaca Inbox dari HP</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openAdminDrawer()" class="px-3 py-1 rounded-lg bg-slate-950 text-white text-xs font-semibold hover:bg-slate-800">
+                    Panel Kelola (<span id="banner-inbox-count">0</span> Inbox)
+                </button>
+                <button onclick="logoutAdmin()" class="px-2.5 py-1 rounded-lg bg-white/80 text-slate-900 text-xs font-semibold hover:bg-white">
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- HERO SECTION (MENGGUNAKAN GAMBAR GEREJA KATOLIK KRISTUS RAJA)         -->
+    <!-- ===================================================================== -->
+    <section id="beranda" class="hero-bg relative min-h-[92vh] flex items-center pt-20 pb-16 overflow-hidden">
+        <!-- Gradient Overlay untuk keterbacaan teks maksimal -->
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-900/65 to-slate-950/90"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center lg:text-left">
+            <div class="max-w-3xl mx-auto lg:mx-0 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/20 border border-amber-300/30 backdrop-blur-md text-amber-200 text-xs sm:text-sm font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                    <span>Gereja Katolik Paroki Kristus Raja</span>
+                </div>
+
+                <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-sm">
+                    Muda, Beriman, dan <span class="text-amber-400 italic">Melayani</span> dalam Kristus Raja
+                </h1>
+
+                <p id="hero-subtitle" class="text-base sm:text-lg text-slate-200 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                    Wadah persekutuan, pelayanan, dan kreativitas Orang Muda Katolik (OMK) Gereja Katolik Kristus Raja. Mari bertumbuh bersama menjadi garam dan terang bagi Gereja serta sesama.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+                    <a href="#project" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-bold text-sm sm:text-base shadow-xl shadow-amber-500/25 transition flex items-center justify-center gap-2">
+                        <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                        <span>Dukung Project OMK (QRIS)</span>
+                    </a>
+                    <button onclick="openAiChat()" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white font-semibold text-sm sm:text-base transition flex items-center justify-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-amber-300"></i>
+                        <span>Tanya AI & Ketua OMK</span>
+                    </button>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-white/15 max-w-lg mx-auto lg:mx-0 text-white">
+                    <div>
+                        <span class="block text-xl sm:text-2xl font-extrabold text-amber-400">13–35</span>
+                        <span class="text-xs text-slate-300">Usia Anggota</span>
+                    </div>
+                    <div>
+                        <span class="block text-xl sm:text-2xl font-extrabold text-amber-400">3+</span>
+                        <span class="text-xs text-slate-300">Project Aktif</span>
+                    </div>
+                    <div>
+                        <span class="block text-xl sm:text-2xl font-extrabold text-amber-400">100%</span>
+                        <span class="text-xs text-slate-300">Semangat Kasih</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 1: PENJELASAN TENTANG OMK                                     -->
+    <!-- ===================================================================== -->
+    <section id="tentang" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-12 gap-10 items-center">
+            <div class="lg:col-span-6 space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/10 text-blue-900 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                    <span>Tentang Kami</span>
+                </div>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900 leading-tight">
+                    Mengenal Lebih Dekat OMK Gereja Katolik Kristus Raja
+                </h2>
+                <p id="about-description" class="text-slate-600 leading-relaxed text-base">
+                    Orang Muda Katolik (OMK) Gereja Katolik Kristus Raja adalah komunitas kaum muda Katolik berusia 13–35 tahun (belum menikah) yang dipanggil untuk bertumbuh bersama dalam iman akan Kristus Raja Semesta Alam. Kami hadir sebagai ruang aman untuk berkreasi, melayani liturgi, melakukan aksi sosial, dan mempererat persaudaraan sejati.
+                </p>
+
+                <!-- 3 Pilar OMK -->
+                <div class="grid sm:grid-cols-3 gap-4 pt-2">
+                    <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-3">
+                            <i data-lucide="flame" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1">Persekutuan</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Membangun persaudaraan akrab antar lingkungan dan wilayah.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center mb-3">
+                            <i data-lucide="music" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1">Liturgi & Talenta</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Melayani koor, lektor, misdinar dewasa, dan seni kreatif.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-3">
+                            <i data-lucide="hand-heart" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1">Aksi Sosial</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Berbagi kasih nyata kepada sesama yang membutuhkan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Card -->
+            <div class="lg:col-span-6">
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 aspect-[4/3] group">
+                    <img id="about-card-img" src="626673.jpg" onerror="this.src='https://placehold.co/800x600/1e3a8a/ffffff?text=Gereja+Katolik+Kristus+Raja'" alt="Gereja Katolik Kristus Raja" class="w-full h-full object-cover opacity-90 group-hover:scale-105 transition duration-700">
+                    <button onclick="openAdminDrawer(); switchAdminTab('media');" class="admin-only hidden absolute top-4 right-4 px-3.5 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs shadow-lg items-center gap-1.5">
+                        <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                        <span>Ganti Foto Ini</span>
+                    </button>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex flex-col justify-end p-6 sm:p-8 text-white pointer-events-none">
+                        <blockquote class="font-serif italic text-lg sm:text-xl text-amber-200 mb-2">
+                            "Jangan seorang pun menganggap engkau rendah karena engkau muda. Jadilah teladan bagi orang-orang percaya."
+                        </blockquote>
+                        <p class="text-xs sm:text-sm font-semibold tracking-wider uppercase text-slate-300">— 1 Timotius 4:12</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 2: PARTISIPASI PROJECT OMK (DONASI QRIS & WA SEKRETARIS)       -->
+    <!-- ===================================================================== -->
+    <section id="project" class="py-16 sm:py-24 bg-slate-900 text-white px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div class="space-y-3 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-wider">
+                        <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+                        <span>Partisipasi Umat</span>
+                    </div>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white">
+                        Project & Gerakan Kasih OMK
+                    </h2>
+                    <p class="text-slate-300 text-sm sm:text-base">
+                        Umat dapat mendukung secara langsung program pelayanan dan aksi sosial OMK melalui pemindaian kode <strong>QRIS resmi</strong> serta konfirmasi cepat ke <strong>WhatsApp Sekretaris OMK</strong>.
+                    </p>
+                </div>
+
+                <!-- Tombol Tambah Project (Khusus Mode Pengurus) -->
+                <button onclick="openProjectFormModal()" class="admin-only hidden px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm items-center gap-2 self-start">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Tambah Project Baru</span>
+                </button>
+            </div>
+
+            <!-- Grid Kartu Project -->
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Diisi secara dinamis oleh JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 3: ALBUM DOKUMENTASI KEGIATAN OMK                             -->
+    <!-- ===================================================================== -->
+    <section id="album" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+            <div class="space-y-3">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-amber-800 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                    <span>Galeri Kenangan</span>
+                </div>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+                    Album Dokumentasi Kegiatan
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base max-w-xl">
+                    Momen kebersamaan, pelayanan liturgi, retret, dan bakti sosial OMK Gereja Katolik Kristus Raja.
+                </p>
+            </div>
+
+            <!-- Tombol Unggah Foto dari HP -->
+            <button onclick="openUploadPhotoModal()" class="px-5 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm shadow-lg transition flex items-center justify-center gap-2 self-start sm:self-auto">
+                <i data-lucide="image-plus" class="w-4 h-4 text-amber-400"></i>
+                <span>Unggah Foto Kegiatan</span>
+            </button>
+        </div>
+
+        <!-- Filter Kategori Album -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-4 mb-6">
+            <button onclick="filterGallery('Semua')" data-filter="Semua" class="gallery-filter-btn px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs sm:text-sm whitespace-nowrap transition">Semua Kegiatan</button>
+            <button onclick="filterGallery('Liturgi')" data-filter="Liturgi" class="gallery-filter-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-xs sm:text-sm whitespace-nowrap transition">Liturgi & Koor</button>
+            <button onclick="filterGallery('Bakti Sosial')" data-filter="Bakti Sosial" class="gallery-filter-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-xs sm:text-sm whitespace-nowrap transition">Bakti Sosial</button>
+            <button onclick="filterGallery('Keakraban')" data-filter="Keakraban" class="gallery-filter-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-xs sm:text-sm whitespace-nowrap transition">Retret & Keakraban</button>
+        </div>
+
+        <!-- Grid Foto Album -->
+        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Diisi secara dinamis oleh JavaScript -->
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 4: KONTAK PENGURUS INTI (KETUA, SEKRETARIAT, BENDAHARA)       -->
+    <!-- ===================================================================== -->
+    <section id="pengurus" class="py-16 sm:py-24 bg-slate-100 border-y border-slate-200/80 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/10 text-blue-900 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+                    <span>Narahubung Resmi</span>
+                </div>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+                    Pengurus Inti OMK Kristus Raja
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base">
+                    Hubungi pengurus inti kami melalui WhatsApp untuk informasi pendaftaran anggota, koordinasi kegiatan, maupun konfirmasi donasi.
+                </p>
+            </div>
+
+            <div id="contacts-grid" class="grid md:grid-cols-3 gap-6">
+                <!-- Kartu Ketua, Sekretariat & Bendahara dirender dinamis -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 5: LOKASI GEREJA & JADWAL KEGIATAN                            -->
+    <!-- ===================================================================== -->
+    <section id="lokasi" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+            <div class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between space-y-6">
+                <div class="space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                        <span>Lokasi Sekretariat & Gereja</span>
+                    </div>
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900">
+                        Gereja Katolik Kristus Raja
+                    </h2>
+                    <p id="church-address-text" class="text-slate-600 text-sm leading-relaxed">
+                        Jl. Gereja Katolik Kristus Raja No. 1, Pusat Paroki Kristus Raja. (Ruang Sekretariat OMK berada di Gedung Karya Pastoral Lt. 2)
+                    </p>
+
+                    <div class="space-y-3 pt-2 border-t border-slate-100">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Jadwal Kumpul Rutin OMK</h4>
+                                <p id="omk-schedule-text" class="text-xs text-slate-500 mt-0.5">Setiap Sabtu, Pukul 18.30 WIB (Setelah Misa Sore)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="church" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">Misa Kaum Muda (OMK)</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Minggu ke-2 setiap bulan, Pukul 17.00 WIB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a id="maps-external-link" href="https://maps.google.com/?q=Gereja+Katolik+Kristus+Raja" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-5 rounded-2xl bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm text-center shadow-lg transition flex items-center justify-center gap-2">
+                    <i data-lucide="navigation" class="w-4 h-4"></i>
+                    <span>Buka Petunjuk Arah di Google Maps</span>
+                </a>
+            </div>
+
+            <!-- Interactive Map Frame -->
+            <div class="lg:col-span-7 rounded-3xl overflow-hidden border border-slate-200 shadow-sm min-h-[320px] bg-slate-200 relative">
+                <iframe 
+                    id="google-map-iframe"
+                    title="Peta Lokasi Gereja Katolik Kristus Raja"
+                    src="https://maps.google.com/maps?q=Gereja%20Katolik%20Kristus%20Raja&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                    class="w-full h-full min-h-[340px] border-0" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECTION 6: FITUR SARAN & KRITIK TERHUBUNG KE INBOX PENGURUS           -->
+    <!-- ===================================================================== -->
+    <section id="saran" class="py-16 sm:py-24 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white/10 backdrop-blur-xl border border-white/15 rounded-3xl p-6 sm:p-10 shadow-2xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase tracking-wider mb-2">Suara Umat & Anggota</span>
+                        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Kotak Saran & Kritik OMK</h2>
+                        <p class="text-slate-300 text-sm mt-1">Pesan Anda akan langsung masuk ke <strong>Inbox Pengurus OMK</strong> untuk bahan evaluasi dan pengembangan kegiatan.</p>
+                    </div>
+                    <button onclick="openInboxQuickView()" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-amber-300 text-xs sm:text-sm font-bold flex items-center gap-2 self-start">
+                        <i data-lucide="inbox" class="w-4 h-4"></i>
+                        <span>Lihat Inbox (<span id="section-inbox-count">0</span>)</span>
+                    </button>
+                </div>
+
+                <form id="feedback-form" onsubmit="submitFeedback(event)" class="space-y-4">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-200 mb-1.5">Nama Pengirim (Opsional / Boleh Anonim)</label>
+                            <input type="text" id="fb-name" placeholder="Contoh: Yohanes / Anonim" class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-amber-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-200 mb-1.5">Kategori Masukan</label>
+                            <select id="fb-category" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-white/20 text-white text-sm focus:outline-none focus:border-amber-400">
+                                <option value="Saran Kegiatan">💡 Saran Kegiatan OMK</option>
+                                <option value="Kritik Membangun">📝 Kritik Membangun</option>
+                                <option value="Usulan Pelayanan">🎶 Usulan Pelayanan Liturgi</option>
+                                <option value="Lainnya">💬 Lainnya</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-200 mb-1.5">Pesan Saran atau Kritik *</label>
+                        <textarea id="fb-message" rows="4" required placeholder="Tuliskan ide, saran, atau kritik membangun untuk OMK Gereja Katolik Kristus Raja..." class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-amber-400"></textarea>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                        <p class="text-xs text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
+                            <span>Tersimpan langsung di Inbox Pengurus OMK.</span>
+                        </p>
+                        <button type="submit" class="px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Kirim ke Inbox Pengurus</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- FOOTER                                                                -->
+    <!-- ===================================================================== -->
+    <footer class="bg-slate-950 text-slate-400 py-10 px-4 sm:px-6 lg:px-8 border-t border-white/10 text-center sm:text-left pb-24 sm:pb-12">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-extrabold flex items-center justify-center">✝</div>
+                <div>
+                    <p class="text-white font-bold text-sm">OMK Gereja Katolik Kristus Raja</p>
+                    <p class="text-xs text-slate-400">Kristus Raja Semesta Alam, Doakanlah Kami.</p>
+                </div>
+            </div>
+            <p class="text-xs text-slate-500">© 2026 Orang Muda Katolik Paroki Kristus Raja. Dapat dikelola via Mobile.</p>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- FLOATING BACKSOUND PLAYER: LAGU ROHANI "NYALAKAN APIMU"               -->
+    <!-- ===================================================================== -->
+    <div class="fixed bottom-5 left-4 sm:left-5 z-50">
+        <!-- Audio element untuk file MP3 kustom pengurus -->
+        <audio id="bg-audio-element" loop preload="auto"></audio>
+
+        <div class="bg-slate-900/95 backdrop-blur-xl text-white border border-white/15 rounded-2xl sm:rounded-full p-2 sm:px-4 sm:py-2.5 shadow-2xl flex items-center gap-2.5 sm:gap-3 max-w-[235px] sm:max-w-xs transition-all">
+            <button onclick="toggleBacksound()" id="music-toggle-btn" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 flex items-center justify-center shrink-0 shadow-md transition" aria-label="Putar atau Jeda Backsound">
+                <i data-lucide="play" id="music-play-icon" class="w-4 h-4 fill-current ml-0.5"></i>
+            </button>
+
+            <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-1.5">
+                    <div id="music-eq" class="flex items-end gap-[2px] h-3.5 shrink-0">
+                        <span class="w-[2.5px] h-1 bg-amber-400 rounded-full"></span>
+                        <span class="w-[2.5px] h-2 bg-amber-400 rounded-full"></span>
+                        <span class="w-[2.5px] h-1.5 bg-amber-400 rounded-full"></span>
+                        <span class="w-[2.5px] h-1 bg-amber-400 rounded-full"></span>
+                    </div>
+                    <p id="music-title-display" class="text-xs font-bold text-amber-300 truncate">Nyalakan Apimu</p>
+                </div>
+                <p id="music-status-text" class="text-[10px] text-slate-300 truncate">Ketuk Putar • Lagu Rohani</p>
+            </div>
+
+            <!-- Volume / Mute Quick Button -->
+            <button onclick="toggleMuteBacksound()" id="music-mute-btn" class="hidden sm:flex p-1.5 rounded-full hover:bg-white/10 text-slate-300 transition" title="Bisukan / Bunyikan">
+                <i data-lucide="volume-2" id="music-vol-icon" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- FLOATING AI ASSISTANT WIDGET (Tanya AI + Eskalasi ke WA Ketua OMK)    -->
+    <!-- ===================================================================== -->
+    <div class="fixed bottom-5 right-4 sm:right-5 z-50">
+        <!-- Chat Window -->
+        <div id="ai-chat-window" class="hidden mb-3 w-[90vw] sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[75vh]">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-950 to-slate-900 p-4 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm">Asisten AI OMK Kristus Raja</h3>
+                        <p class="text-[11px] text-amber-300">Tanya info OMK • Terhubung ke WA Ketua</p>
+                    </div>
+                </div>
+                <button onclick="closeAiChat()" class="p-1.5 rounded-lg hover:bg-white/10 text-slate-300">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="ai-chat-messages" class="p-4 space-y-3 overflow-y-auto flex-1 bg-slate-50 text-sm min-h-[260px]">
+                <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm text-slate-700 space-y-2">
+                    <p>Shalom & Salam Kasih dalam Kristus Raja! 👋 Saya asisten virtual <strong>OMK Gereja Katolik Kristus Raja</strong>.</p>
+                    <p class="text-xs text-slate-500">Silakan tanyakan jadwal kumpul, cara gabung OMK, info donasi QRIS, atau jika AI belum memiliki jawabannya, Anda bisa langsung terhubung ke <strong>WhatsApp Ketua OMK</strong>.</p>
+                </div>
+            </div>
+
+            <!-- Quick Question Chips -->
+            <div class="px-3 py-2 bg-slate-100 border-t border-slate-200 flex gap-1.5 overflow-x-auto no-scrollbar">
+                <button onclick="askQuickQuestion('Kapan jadwal kumpul OMK?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-700 whitespace-nowrap hover:border-amber-500">📅 Jadwal Kumpul</button>
+                <button onclick="askQuickQuestion('Bagaimana cara ikut donasi project OMK?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-700 whitespace-nowrap hover:border-amber-500">💳 Cara Donasi QRIS</button>
+                <button onclick="askQuickQuestion('Bagaimana cara mendaftar menjadi anggota OMK?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-700 whitespace-nowrap hover:border-amber-500">🙋 Gabung OMK</button>
+            </div>
+
+            <!-- Input Area -->
+            <form onsubmit="handleAiSubmit(event)" class="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+                <input type="text" id="ai-user-input" placeholder="Ketik pertanyaan Anda..." required class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+                <button type="submit" class="p-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Floating Trigger Button -->
+        <button onclick="toggleAiChat()" class="ml-auto animate-pulse-soft flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-gradient-to-r from-blue-900 to-slate-900 hover:from-blue-800 hover:to-slate-800 text-white border border-amber-400/40 shadow-2xl">
+            <div class="w-7 h-7 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center">
+                <i data-lucide="message-circle-question" class="w-4 h-4"></i>
+            </div>
+            <span class="font-bold text-xs sm:text-sm pr-1">Tanya AI / Ketua OMK</span>
+        </button>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 1: DONASI QRIS & KONFIRMASI WA SEKRETARIS                       -->
+    <!-- ===================================================================== -->
+    <div id="donation-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+            <div class="bg-slate-900 p-5 text-white flex items-center justify-between">
+                <div>
+                    <span class="text-[11px] uppercase tracking-wider text-amber-400 font-bold">Partisipasi Kasih OMK</span>
+                    <h3 id="modal-project-title" class="font-bold text-lg leading-snug">Donasi Project OMK</h3>
+                </div>
+                <button onclick="closeModal('donation-modal')" class="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-5 text-center max-h-[80vh] overflow-y-auto">
+                <p class="text-xs sm:text-sm text-slate-600">
+                    Scan kode <strong>QRIS</strong> di bawah ini menggunakan aplikasi Mobile Banking atau E-Wallet (GoPay, OVO, DANA, ShopeePay, LinkAja, BCA, Mandiri, BRI, dll).
+                </p>
+
+                <!-- QRIS Card -->
+                <div class="bg-slate-50 border-2 border-dashed border-amber-400 rounded-2xl p-4 inline-flex flex-col items-center justify-center mx-auto">
+                    <div class="flex items-center gap-1.5 mb-2">
+                        <span class="px-2 py-0.5 rounded bg-red-600 text-white font-extrabold text-[10px] tracking-widest">QRIS</span>
+                        <span class="text-xs font-bold text-slate-700">OMK Kristus Raja</span>
+                    </div>
+                    <!-- Custom Uploaded QRIS Image OR Generated QR -->
+                    <img id="custom-qris-preview" src="" alt="QRIS OMK Kristus Raja" class="hidden w-48 h-48 object-contain rounded-lg bg-white p-1">
+                    <div id="generated-qris-box" class="bg-white p-2.5 rounded-xl shadow-sm"></div>
+                    <p id="qris-nmid-label" class="text-[10px] text-slate-500 mt-2 font-mono">NMID: ID1026008899123 • OMK PAROKI KRISTUS RAJA</p>
+                </div>
+
+                <!-- Nominal Cepat (Opsional untuk pesan WA) -->
+                <div class="text-left space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Nominal Donasi Anda (untuk Konfirmasi WA)</label>
+                    <input type="text" id="donation-amount-input" placeholder="Contoh: Rp 50.000" class="w-full px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-sm focus:outline-none focus:border-amber-500">
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-2.5 pt-1">
+                    <button onclick="confirmDonationToSecretary()" class="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 transition">
+                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        <span>Konfirmasi ke WA Sekretaris OMK</span>
+                    </button>
+                    <button onclick="downloadQrisImage()" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Simpan Gambar QRIS ke Galeri HP</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 2: UNGGAH FOTO KE ALBUM DOKUMENTASI (SUPPORT GALERI HP)         -->
+    <!-- ===================================================================== -->
+    <div id="upload-photo-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200">
+            <div class="bg-slate-900 p-5 text-white flex items-center justify-between">
+                <h3 class="font-bold text-lg">Tambah Dokumentasi Kegiatan</h3>
+                <button onclick="closeModal('upload-photo-modal')" class="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form onsubmit="handlePhotoUpload(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Pilih Foto dari Galeri HP / Komputer *</label>
+                    <input type="file" id="photo-file-input" accept="image/*" required class="w-full text-xs text-slate-600 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 border border-slate-200 rounded-xl p-1.5">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Judul Kegiatan *</label>
+                    <input type="text" id="photo-title-input" required placeholder="Contoh: Tugas Koor Misa Minggu Palma" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori</label>
+                        <select id="photo-category-input" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                            <option value="Liturgi">Liturgi</option>
+                            <option value="Bakti Sosial">Bakti Sosial</option>
+                            <option value="Keakraban">Keakraban</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal</label>
+                        <input type="text" id="photo-date-input" placeholder="Contoh: 12 Mei 2026" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-lg transition">
+                    Simpan ke Album OMK
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 3: LIGHTBOX FOTO FULLSCREEN                                     -->
+    <!-- ===================================================================== -->
+    <div id="lightbox-modal" onclick="closeModal('lightbox-modal')" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div onclick="event.stopPropagation()" class="max-w-3xl w-full bg-slate-900 rounded-3xl overflow-hidden border border-white/15 shadow-2xl">
+            <div class="relative">
+                <img id="lightbox-img" src="" alt="Preview Foto" class="w-full max-h-[70vh] object-contain bg-black">
+                <button onclick="closeModal('lightbox-modal')" class="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white hover:bg-black">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-5 text-white flex items-center justify-between gap-4">
+                <div>
+                    <span id="lightbox-cat" class="text-xs font-bold text-amber-400 uppercase"></span>
+                    <h4 id="lightbox-title" class="font-bold text-lg"></h4>
+                    <p id="lightbox-date" class="text-xs text-slate-400"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 4: ADMIN LOGIN (PIN PENGURUS UNTUK EDIT DARI HP)                -->
+    <!-- ===================================================================== -->
+    <div id="admin-login-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-5">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                        <i data-lucide="key-round" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900">Akses Pengurus OMK</h3>
+                </div>
+                <button onclick="closeModal('admin-login-modal')" class="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Masukkan PIN Pengurus untuk mengubah gambar background, lagu rohani, foto & target project, nomor WhatsApp pengurus, QRIS, serta membaca Inbox langsung dari HP Anda.
+            </p>
+            <form onsubmit="verifyAdminPin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">PIN Pengurus (Default: 1234)</label>
+                    <input type="password" id="admin-pin-input" inputmode="numeric" maxlength="6" placeholder="••••" required class="w-full px-4 py-3 rounded-xl bg-slate-100 border border-slate-200 text-center text-xl font-extrabold tracking-[0.5em] focus:outline-none focus:border-amber-500">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg transition">
+                    Masuk Mode Edit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 5: PANEL KELOLA PENGURUS (MOBILE-OPTIMIZED DRAWER)              -->
+    <!-- ===================================================================== -->
+    <div id="admin-drawer-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+            <!-- Header -->
+            <div class="bg-slate-900 p-5 text-white flex items-center justify-between shrink-0">
+                <div>
+                    <span class="text-[11px] text-amber-400 font-bold uppercase tracking-wider">Mobile CMS Pengurus</span>
+                    <h3 class="font-bold text-lg">Kelola Website & Inbox OMK</h3>
+                </div>
+                <button onclick="closeModal('admin-drawer-modal')" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="flex border-b border-slate-200 bg-slate-50 px-2 pt-2 gap-1 overflow-x-auto">
+                <button onclick="switchAdminTab('inbox')" id="tab-btn-inbox" class="admin-tab-btn px-3.5 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold bg-white text-blue-700 border-t border-x border-slate-200 whitespace-nowrap">
+                    📥 Inbox (<span id="tab-inbox-badge">0</span>)
+                </button>
+                <button onclick="switchAdminTab('media')" id="tab-btn-media" class="admin-tab-btn px-3.5 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                    🖼️ Gambar & Lagu
+                </button>
+                <button onclick="switchAdminTab('contacts')" id="tab-btn-contacts" class="admin-tab-btn px-3.5 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                    📞 Pengurus & QRIS
+                </button>
+                <button onclick="switchAdminTab('profile')" id="tab-btn-profile" class="admin-tab-btn px-3.5 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                    ✏️ Profil & Lokasi
+                </button>
+            </div>
+
+            <!-- Tab Content Area -->
+            <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-6">
+                
+                <!-- TAB 1: INBOX SARAN & KRITIK -->
+                <div id="admin-tab-inbox" class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-slate-900 text-sm">Pesan Masuk dari Umat & Anggota</h4>
+                        <button onclick="clearAllInbox()" class="text-xs text-red-600 hover:underline font-semibold">Bersihkan Semua</button>
+                    </div>
+                    <div id="inbox-list-container" class="space-y-3">
+                        <!-- Diisi dinamis -->
+                    </div>
+                </div>
+
+                <!-- TAB MEDIA: GANTI BACKGROUND GEREJA, FOTO PROFIL & LAGU BACKSOUND -->
+                <div id="admin-tab-media" class="hidden space-y-5">
+                    <form onsubmit="saveMediaAndMusic(event)" class="space-y-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                                <i data-lucide="image" class="w-4 h-4 text-blue-600"></i>
+                                <span>1. Foto Background Utama (Hero Gereja)</span>
+                            </h4>
+                            <p class="text-xs text-slate-500">Pilih foto baru dari galeri HP untuk mengganti gambar latar utama website.</p>
+                            <input type="file" id="edit-hero-bg-file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:bg-blue-600 file:text-white file:font-bold">
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+                                <i data-lucide="camera" class="w-4 h-4 text-emerald-600"></i>
+                                <span>2. Foto Bagian "Tentang OMK"</span>
+                            </h4>
+                            <p class="text-xs text-slate-500">Unggah foto kebersamaan OMK atau gedung gereja dari HP.</p>
+                            <input type="file" id="edit-about-img-file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:bg-emerald-600 file:text-white file:font-bold">
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 space-y-3">
+                            <h4 class="font-bold text-sm text-amber-950 flex items-center gap-2">
+                                <i data-lucide="music" class="w-4 h-4 text-amber-600"></i>
+                                <span>3. Backsound Lagu Rohani ("Nyalakan Apimu")</span>
+                            </h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Lagu yang Ditampilkan</label>
+                                <input type="text" id="edit-music-title" placeholder="Nyalakan Apimu - Lagu Rohani OMK" class="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Unggah File MP3 / Audio dari HP (Opsional)</label>
+                                <input type="file" id="edit-music-file" accept="audio/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:bg-amber-500 file:text-slate-950 file:font-bold">
+                                <p class="text-[11px] text-slate-500 mt-1">Jika belum mengunggah MP3, website otomatis memutar melodi instrumental rohani "Nyalakan Apimu".</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-lg">
+                            Simpan Gambar & Backsound
+                        </button>
+                    </form>
+
+                    <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                        <span class="text-xs text-slate-500">Ingin mengembalikan tampilan awal?</span>
+                        <button onclick="resetToDefaultState()" class="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold">
+                            Reset Default
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TAB 2: EDIT NOMOR PENGURUS & QRIS -->
+                <div id="admin-tab-contacts" class="hidden space-y-5">
+                    <form onsubmit="saveContactsAndQris(event)" class="space-y-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-sm text-slate-900">1. Ketua OMK (Terhubung ke Eskalasi AI)</h4>
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <input type="text" id="edit-ketua-name" placeholder="Nama Ketua OMK" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm">
+                                <input type="tel" id="edit-ketua-wa" placeholder="No. WA (62812...)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm">
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-sm text-slate-900">2. Sekretariat OMK (Konfirmasi Donasi)</h4>
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <input type="text" id="edit-sekre-name" placeholder="Nama Sekretaris" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm">
+                                <input type="tel" id="edit-sekre-wa" placeholder="No. WA (62812...)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm">
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-sm text-slate-900">3. Bendahara OMK</h4>
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <input type="text" id="edit-bendahara-name" placeholder="Nama Bendahara" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm">
+                                <input type="tel" id="edit-bendahara-wa" placeholder="No. WA (62812...)" class="px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm">
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-2">
+                            <h4 class="font-bold text-sm text-amber-900">Unggah Gambar QRIS Resmi dari Galeri HP (Opsional)</h4>
+                            <input type="file" id="edit-qris-file" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-amber-500 file:text-slate-950 file:font-bold">
+                        </div>
+
+                        <button type="submit" class="w-full py-3.5 rounded-2xl bg-blue-900 hover:bg-blue-800 text-white font-bold text-sm shadow-lg">
+                            Simpan Perubahan Kontak & QRIS
+                        </button>
+                    </form>
+                </div>
+
+                <!-- TAB 3: EDIT PROFIL & LOKASI -->
+                <div id="admin-tab-profile" class="hidden space-y-4">
+                    <form onsubmit="saveProfileAndLocation(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Penjelasan Tentang OMK</label>
+                            <textarea id="edit-about-desc" rows="4" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Lengkap Gereja Kristus Raja</label>
+                            <textarea id="edit-church-address" rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Jadwal Kumpul Rutin OMK</label>
+                            <input type="text" id="edit-omk-schedule" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Ganti PIN Pengurus (4-6 Digit)</label>
+                            <input type="text" id="edit-admin-pin" maxlength="6" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-mono">
+                        </div>
+                        <button type="submit" class="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-lg">
+                            Simpan Profil & Lokasi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL 6: TAMBAH / EDIT PROJECT DONASI (PENGURUS)                      -->
+    <!-- ===================================================================== -->
+    <div id="project-form-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200">
+            <div class="bg-slate-900 p-5 text-white flex items-center justify-between">
+                <h3 id="project-form-modal-title" class="font-bold text-lg">Tambah Project Donasi</h3>
+                <button onclick="closeModal('project-form-modal')" class="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <form onsubmit="saveProjectForm(event)" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto">
+                <input type="hidden" id="proj-id-input">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Nama Project *</label>
+                    <input type="text" id="proj-title-input" required placeholder="Contoh: Bakti Sosial Panti Asuhan" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Label Kategori</label>
+                    <input type="text" id="proj-badge-input" placeholder="Aksi Sosial / Liturgi / Pembinaan" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi Singkat *</label>
+                    <textarea id="proj-desc-input" rows="2" required class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Foto / Poster Project (Pilih dari Galeri HP)</label>
+                    <input type="file" id="proj-image-input" accept="image/*" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-700 file:font-bold border border-slate-200 rounded-xl p-1">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Terkumpul (Rp) *</label>
+                        <input type="number" id="proj-collected-input" required min="0" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Target Dana (Rp) *</label>
+                        <input type="number" id="proj-target-input" required min="1000" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg">
+                    Simpan Project
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- JAVASCRIPT LOGIC (STATE, AI ASSISTANT, QRIS, ADMIN EDIT, RENDERING)   -->
+    <!-- ===================================================================== -->
+    <script>
+        // Default Data State untuk OMK Gereja Katolik Kristus Raja
+        const DEFAULT_STATE = {
+            media: {
+                heroBg: "626673.jpg",
+                aboutImg: "626673.jpg",
+                musicTitle: "Nyalakan Apimu - Lagu Rohani",
+                customAudioDataUrl: null
+            },
+            profile: {
+                aboutDesc: "Orang Muda Katolik (OMK) Gereja Katolik Kristus Raja adalah komunitas kaum muda Katolik berusia 13–35 tahun (belum menikah) yang dipanggil untuk bertumbuh bersama dalam iman akan Kristus Raja Semesta Alam. Kami hadir sebagai ruang aman untuk berkreasi, melayani liturgi, melakukan aksi sosial, dan mempererat persaudaraan sejati.",
+                address: "Jl. Gereja Katolik Kristus Raja No. 1, Pusat Paroki Kristus Raja. (Ruang Sekretariat OMK berada di Gedung Karya Pastoral Lt. 2)",
+                schedule: "Setiap Sabtu, Pukul 18.30 WIB (Setelah Misa Sore)"
+            },
+            contacts: {
+                ketua: {
+                    role: "Ketua OMK",
+                    name: "Michael Pratama",
+                    wa: "6281234567890",
+                    desc: "Koordinator umum & narahubung kegiatan paroki."
+                },
+                sekretariat: {
+                    role: "Sekretariat OMK",
+                    name: "Maria Clara",
+                    wa: "6281298765432",
+                    desc: "Konfirmasi donasi QRIS, pendaftaran anggota & surat menyurat."
+                },
+                bendahara: {
+                    role: "Bendahara OMK",
+                    name: "Bernadette Putri",
+                    wa: "6281311223344",
+                    desc: "Pengelolaan kas OMK, laporan dana project & sponsorship."
+                }
+            },
+            qrisCustomDataUrl: null,
+            adminPin: "1234",
+            projects: [
+                {
+                    id: "proj-1",
+                    title: "Bakti Sosial & Berbagi Kasih Panti Asuhan",
+                    badge: "Aksi Sosial",
+                    desc: "Penggalangan dana untuk paket sembako, alat tulis, dan kunjungan kasih bersama anak-anak Panti Asuhan St. Yusup.",
+                    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=800&q=80",
+                    collected: 4250000,
+                    target: 6000000
+                },
+                {
+                    id: "proj-2",
+                    title: "Pengadaan Alat Musik & Sound Liturgi OMK",
+                    badge: "Pelayanan Liturgi",
+                    desc: "Pembaharuan cajon, kabel audio, dan mic wireless untuk mendukung tugas koor & misa kaum muda setiap bulan.",
+                    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+                    collected: 3100000,
+                    target: 5000000
+                },
+                {
+                    id: "proj-3",
+                    title: "Retreat & Pembinaan Kepemimpinan OMK 2026",
+                    badge: "Pembinaan Iman",
+                    desc: "Subsidi biaya retreat 3 hari 2 malam agar seluruh anggota OMK dapat ikut serta tanpa terkendala biaya.",
+                    image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=800&q=80",
+                    collected: 5800000,
+                    target: 8500000
+                }
+            ],
+            gallery: [
+                {
+                    id: "gal-1",
+                    title: "Tugas Koor & Pelayanan Misa Kaum Muda",
+                    category: "Liturgi",
+                    date: "14 April 2026",
+                    url: "626673.jpg"
+                },
+                {
+                    id: "gal-2",
+                    title: "Kunjungan Kasih & Berbagi Paket Sembako",
+                    category: "Bakti Sosial",
+                    date: "28 Maret 2026",
+                    url: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80"
+                },
+                {
+                    id: "gal-3",
+                    title: "Malam Keakraban & Doa Taizé Bersama",
+                    category: "Keakraban",
+                    date: "10 Februari 2026",
+                    url: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80"
+                }
+            ],
+            inbox: [
+                {
+                    id: "msg-init-1",
+                    name: "Fransiskus Xaverius",
+                    category: "Saran Kegiatan",
+                    message: "Usul diadakan latihan koor gabungan antar lingkungan setiap Jumat malam menjelang Hari Raya Kristus Raja.",
+                    timestamp: "Hari ini, 09:30"
+                }
+            ]
+        };
+
+        let appState = loadAppState();
+        let isAdminMode = false;
+        let currentGalleryFilter = 'Semua';
+        let selectedProjectForDonation = null;
+
+        function loadAppState() {
+            try {
+                const saved = localStorage.getItem('omk_kristus_raja_state_v2');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    return {
+                        ...DEFAULT_STATE,
+                        ...parsed,
+                        media: { ...DEFAULT_STATE.media, ...(parsed.media || {}) }
+                    };
+                }
+            } catch (e) {
+                console.warn("Storage fallback active");
+            }
+            return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        }
+
+        function saveAppState() {
+            try {
+                localStorage.setItem('omk_kristus_raja_state_v2', JSON.stringify(appState));
+            } catch (e) {
+                showToast("Penyimpanan penuh. Gunakan foto/audio dengan ukuran lebih kecil.", "warning");
+            }
+            renderAll();
+        }
+
+        function compressImageFile(file, maxWidth = 1000) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const scale = Math.min(1, maxWidth / img.width);
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
+                    };
+                    img.onerror = reject;
+                    img.src = event.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function formatRupiah(num) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgClass = type === 'error' ? 'bg-red-600 text-white' : (type === 'warning' ? 'bg-amber-500 text-slate-950' : 'bg-slate-900 text-white border border-amber-400/40');
+            toast.className = `${bgClass} px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-semibold flex items-center gap-2 pointer-events-auto transition-all`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // =====================================================================
+        // RENDER FUNCTIONS
+        // =====================================================================
+        function renderAll() {
+            renderMediaAndMusic();
+            renderProfileAndLocation();
+            renderProjects();
+            renderGallery();
+            renderContacts();
+            renderInboxCounters();
+            updateAdminVisibility();
+            lucide.createIcons();
+        }
+
+        function renderMediaAndMusic() {
+            const heroSection = document.getElementById('beranda');
+            if (heroSection && appState.media.heroBg) {
+                heroSection.style.backgroundImage = `url('${appState.media.heroBg}')`;
+            }
+            const aboutImgEl = document.getElementById('about-card-img');
+            if (aboutImgEl && appState.media.aboutImg) {
+                aboutImgEl.src = appState.media.aboutImg;
+            }
+            const musicTitleEl = document.getElementById('music-title-display');
+            if (musicTitleEl) {
+                musicTitleEl.textContent = appState.media.musicTitle || "Nyalakan Apimu";
+            }
+            const audioEl = document.getElementById('bg-audio-element');
+            if (audioEl && appState.media.customAudioDataUrl && audioEl.src !== appState.media.customAudioDataUrl) {
+                audioEl.src = appState.media.customAudioDataUrl;
+            }
+        }
+
+        function renderProfileAndLocation() {
+            document.getElementById('about-description').textContent = appState.profile.aboutDesc;
+            document.getElementById('church-address-text').textContent = appState.profile.address;
+            document.getElementById('omk-schedule-text').textContent = appState.profile.schedule;
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = appState.projects.map(proj => {
+                const pct = Math.min(100, Math.round((proj.collected / proj.target) * 100));
+                const projImg = proj.image || "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80";
+                return `
+                <div class="bg-slate-800/85 border border-white/10 rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl hover:border-amber-400/40 transition group">
+                    <div>
+                        <div class="relative aspect-[16/9] bg-slate-900 overflow-hidden">
+                            <img src="${projImg}" onerror="this.src='https://placehold.co/800x450/1e293b/fbbf24?text=Project+OMK'" alt="${proj.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-950/75 backdrop-blur-md text-amber-300 text-xs font-bold border border-white/10">${proj.badge || 'Project OMK'}</span>
+
+                            <div class="admin-only ${isAdminMode ? 'flex' : 'hidden'} absolute top-3 right-3 items-center gap-1.5">
+                                <button onclick="openProjectFormModal('${proj.id}')" class="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg flex items-center gap-1" title="Edit Project & Foto">
+                                    <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                                    <span>Edit</span>
+                                </button>
+                                <button onclick="deleteProject('${proj.id}')" class="p-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white shadow-lg" title="Hapus Project">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pb-0 space-y-2.5">
+                            <h3 class="font-bold text-xl text-white group-hover:text-amber-300 transition leading-snug">${proj.title}</h3>
+                            <p class="text-slate-300 text-sm leading-relaxed">${proj.desc}</p>
+                        </div>
+                    </div>
+
+                    <div class="p-6 pt-5 space-y-4">
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-emerald-400">Terkumpul: ${formatRupiah(proj.collected)}</span>
+                                <span class="text-slate-400">${pct}%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-amber-400 to-emerald-400 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-400 text-right">Target: ${formatRupiah(proj.target)}</p>
+                        </div>
+
+                        <button onclick="openDonationModal('${proj.id}')" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
+                            <i data-lucide="qr-code" class="w-4 h-4"></i>
+                            <span>Dukung / Donasi QRIS</span>
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            const filtered = currentGalleryFilter === 'Semua'
+                ? appState.gallery
+                : appState.gallery.filter(item => item.category === currentGalleryFilter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 text-sm bg-white rounded-3xl border border-dashed border-slate-300">Belum ada foto untuk kategori ini. Silakan unggah foto kegiatan!</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="group relative rounded-3xl overflow-hidden bg-slate-900 aspect-[4/3] shadow-md border border-slate-200 cursor-pointer" onclick="openLightbox('${item.id}')">
+                    <img src="${item.url}" onerror="this.src='https://placehold.co/800x600/1e293b/fbbf24?text=Dokumentasi+OMK'" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex flex-col justify-end p-5 text-white">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 mb-1">${item.category} • ${item.date}</span>
+                        <h3 class="font-bold text-base leading-snug">${item.title}</h3>
+                    </div>
+                    <button onclick="event.stopPropagation(); deleteGalleryItem('${item.id}')" class="admin-only ${isAdminMode ? 'flex' : 'hidden'} absolute top-3 right-3 p-2 rounded-xl bg-red-600 text-white shadow-lg" title="Hapus Foto">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderContacts() {
+            const grid = document.getElementById('contacts-grid');
+            const list = [
+                { key: 'ketua', icon: 'crown', color: 'amber', data: appState.contacts.ketua },
+                { key: 'sekretariat', icon: 'file-spreadsheet', color: 'emerald', data: appState.contacts.sekretariat },
+                { key: 'bendahara', icon: 'wallet', color: 'blue', data: appState.contacts.bendahara }
+            ];
+
+            grid.innerHTML = list.map(item => {
+                const cleanWa = item.data.wa.replace(/[^0-9]/g, '');
+                const waText = encodeURIComponent(`Shalom ${item.data.name} (${item.data.role} OMK Kristus Raja), saya ingin bertanya terkait kegiatan OMK.`);
+                return `
+                <div class="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-extrabold uppercase tracking-wider">${item.data.role}</span>
+                            <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-slate-900">${item.data.name}</h3>
+                            <p class="text-xs font-mono text-slate-500 mt-0.5">+${cleanWa}</p>
+                        </div>
+                        <p class="text-sm text-slate-600 leading-relaxed">${item.data.desc}</p>
+                    </div>
+
+                    <a href="https://wa.me/${cleanWa}?text=${waText}" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>Hubungi via WhatsApp</span>
+                    </a>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderInboxCounters() {
+            const count = appState.inbox.length;
+            document.getElementById('section-inbox-count').textContent = count;
+            document.getElementById('banner-inbox-count').textContent = count;
+            document.getElementById('tab-inbox-badge').textContent = count;
+
+            const container = document.getElementById('inbox-list-container');
+            if (count === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-400 text-sm bg-slate-50 rounded-2xl border border-dashed border-slate-200">Inbox masih kosong. Belum ada saran atau kritik masuk.</div>`;
+                return;
+            }
+
+            container.innerHTML = appState.inbox.map(msg => `
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[11px] font-bold">${msg.category}</span>
+                            <span class="font-bold text-sm text-slate-900">${msg.name}</span>
+                        </div>
+                        <button onclick="deleteInboxMessage('${msg.id}')" class="text-slate-400 hover:text-red-600 p-1" title="Hapus Pesan">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">${msg.message}</p>
+                    <p class="text-[11px] text-slate-400">${msg.timestamp}</p>
+                </div>
+            `).join('');
+        }
+
+        // =====================================================================
+        // DONATION QRIS & KONFIRMASI WA SEKRETARIS
+        // =====================================================================
+        function openDonationModal(projectId) {
+            selectedProjectForDonation = appState.projects.find(p => p.id === projectId) || appState.projects[0];
+            document.getElementById('modal-project-title').textContent = selectedProjectForDonation.title;
+            document.getElementById('donation-amount-input').value = '';
+
+            const customImg = document.getElementById('custom-qris-preview');
+            const qrBox = document.getElementById('generated-qris-box');
+            qrBox.innerHTML = '';
+
+            if (appState.qrisCustomDataUrl) {
+                customImg.src = appState.qrisCustomDataUrl;
+                customImg.classList.remove('hidden');
+                qrBox.classList.add('hidden');
+            } else {
+                customImg.classList.add('hidden');
+                qrBox.classList.remove('hidden');
+                new QRCode(qrBox, {
+                    text: `00020101021126610014ID.CO.QRIS.WWW01189360091430000889910215ID10260088991230303UMI51440014ID.CO.QRIS.WWW0215ID10260088991230303UMI5204839853033605802ID5922OMK PAROKI KRISTUS RAJA6007JAKARTA6304A1B2`,
+                    width: 185,
+                    height: 185,
+                    colorDark: "#0f172a",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            }
+
+            openModal('donation-modal');
+        }
+
+        function confirmDonationToSecretary() {
+            const sekre = appState.contacts.sekretariat;
+            const cleanWa = sekre.wa.replace(/[^0-9]/g, '');
+            const amount = document.getElementById('donation-amount-input').value.trim() || "(terlampir pada bukti transfer)";
+            const projTitle = selectedProjectForDonation ? selectedProjectForDonation.title : "Project OMK Kristus Raja";
+
+            const message = `Shalom Kak ${sekre.name} (Sekretariat OMK Gereja Katolik Kristus Raja),\n\nSaya ingin melakukan konfirmasi partisipasi/donasi melalui QRIS untuk:\n📌 *Project:* ${projTitle}\n💰 *Nominal:* ${amount}\n\nBerikut saya lampirkan bukti pembayaran QRIS-nya. Tuhan memberkati pelayanan OMK Kristus Raja! 🙏`;
+            window.open(`https://wa.me/${cleanWa}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function downloadQrisImage() {
+            if (appState.qrisCustomDataUrl) {
+                const a = document.createElement('a');
+                a.href = appState.qrisCustomDataUrl;
+                a.download = 'QRIS-OMK-Kristus-Raja.png';
+                a.click();
+                showToast("Gambar QRIS berhasil diunduh!");
+                return;
+            }
+            const canvas = document.querySelector('#generated-qris-box canvas');
+            if (canvas) {
+                const a = document.createElement('a');
+                a.href = canvas.toDataURL('image/png');
+                a.download = 'QRIS-OMK-Kristus-Raja.png';
+                a.click();
+                showToast("Kode QRIS berhasil disimpan ke perangkat!");
+            }
+        }
+
+        // =====================================================================
+        // ALBUM DOKUMENTASI KEGIATAN
+        // =====================================================================
+        function filterGallery(category) {
+            currentGalleryFilter = category;
+            document.querySelectorAll('.gallery-filter-btn').forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.className = "gallery-filter-btn px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs sm:text-sm whitespace-nowrap transition";
+                } else {
+                    btn.className = "gallery-filter-btn px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-xs sm:text-sm whitespace-nowrap transition";
+                }
+            });
+            renderGallery();
+            lucide.createIcons();
+        }
+
+        function openUploadPhotoModal() {
+            openModal('upload-photo-modal');
+        }
+
+        function handlePhotoUpload(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('photo-file-input');
+            const title = document.getElementById('photo-title-input').value.trim();
+            const category = document.getElementById('photo-category-input').value;
+            const date = document.getElementById('photo-date-input').value.trim() || new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            compressImageFile(file, 900).then(compressedDataUrl => {
+                appState.gallery.unshift({
+                    id: 'gal-' + Date.now(),
+                    title,
+                    category,
+                    date,
+                    url: compressedDataUrl
+                });
+                saveAppState();
+                closeModal('upload-photo-modal');
+                e.target.reset();
+                showToast("Foto berhasil ditambahkan ke Album OMK!");
+            });
+        }
+
+        function deleteGalleryItem(id) {
+            appState.gallery = appState.gallery.filter(g => g.id !== id);
+            saveAppState();
+            showToast("Foto dihapus dari album.");
+        }
+
+        function openLightbox(id) {
+            const item = appState.gallery.find(g => g.id === id);
+            if (!item) return;
+            document.getElementById('lightbox-img').src = item.url;
+            document.getElementById('lightbox-cat').textContent = item.category;
+            document.getElementById('lightbox-title').textContent = item.title;
+            document.getElementById('lightbox-date').textContent = item.date;
+            openModal('lightbox-modal');
+        }
+
+        // =====================================================================
+        // SARAN & KRITIK TERHUBUNG KE INBOX
+        // =====================================================================
+        function submitFeedback(e) {
+            e.preventDefault();
+            const name = document.getElementById('fb-name').value.trim() || "Umat / Anonim";
+            const category = document.getElementById('fb-category').value;
+            const message = document.getElementById('fb-message').value.trim();
+
+            if (!message) return;
+
+            const now = new Date();
+            const timestamp = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            appState.inbox.unshift({
+                id: 'msg-' + Date.now(),
+                name,
+                category,
+                message,
+                timestamp
+            });
+
+            saveAppState();
+            e.target.reset();
+            showToast("Terima kasih! Pesan Anda sudah masuk ke Inbox Pengurus OMK.");
+        }
+
+        function openInboxQuickView() {
+            if (!isAdminMode) {
+                openModal('admin-login-modal');
+                showToast("Masukkan PIN Pengurus (1234) untuk membuka Inbox.", "warning");
+                return;
+            }
+            openAdminDrawer();
+            switchAdminTab('inbox');
+        }
+
+        function deleteInboxMessage(id) {
+            appState.inbox = appState.inbox.filter(m => m.id !== id);
+            saveAppState();
+            showToast("Pesan dihapus dari Inbox.");
+        }
+
+        function clearAllInbox() {
+            appState.inbox = [];
+            saveAppState();
+            showToast("Semua pesan Inbox telah dibersihkan.");
+        }
+
+        // =====================================================================
+        // FITUR PERTANYAAN TERHUBUNG KE AI & ESKALASI KE WA KETUA OMK
+        // =====================================================================
+        function toggleAiChat() {
+            const win = document.getElementById('ai-chat-window');
+            win.classList.toggle('hidden');
+            if (!win.classList.contains('hidden')) {
+                document.getElementById('ai-user-input').focus();
+            }
+        }
+
+        function openAiChat() {
+            document.getElementById('ai-chat-window').classList.remove('hidden');
+            document.getElementById('ai-user-input').focus();
+        }
+
+        function closeAiChat() {
+            document.getElementById('ai-chat-window').classList.add('hidden');
+        }
+
+        function askQuickQuestion(text) {
+            document.getElementById('ai-user-input').value = text;
+            handleAiSubmit(new Event('submit'));
+        }
+
+        function handleAiSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('ai-user-input');
+            const question = input.value.trim();
+            if (!question) return;
+
+            appendChatBubble(question, 'user');
+            input.value = '';
+
+            setTimeout(() => {
+                const result = generateAiResponse(question);
+                appendChatBubble(result.reply, 'ai', result.needsChairmanWa, question);
+            }, 450);
+        }
+
+        function generateAiResponse(q) {
+            const lower = q.toLowerCase();
+            const ketua = appState.contacts.ketua;
+            const sekre = appState.contacts.sekretariat;
+
+            if (lower.includes('jadwal') || lower.includes('kumpul') || lower.includes('kapan') || lower.includes('misa')) {
+                return {
+                    reply: `📅 <strong>Jadwal Kegiatan OMK Kristus Raja:</strong><br>• Kumpul Rutin OMK: <strong>${appState.profile.schedule}</strong>.<br>• Misa Kaum Muda: Minggu ke-2 setiap bulan pukul 17.00 WIB di Gereja Katolik Kristus Raja.`,
+                    needsChairmanWa: false
+                };
+            }
+            if (lower.includes('donasi') || lower.includes('qris') || lower.includes('sumbang') || lower.includes('project') || lower.includes('bantu')) {
+                return {
+                    reply: `💳 <strong>Cara Berpartisipasi / Donasi Project OMK:</strong><br>1. Gulir ke bagian <em>Project & Gerakan Kasih OMK</em>.<br>2. Klik tombol <strong>"Dukung / Donasi QRIS"</strong> pada project yang dipilih.<br>3. Scan kode QRIS lalu klik <strong>"Konfirmasi ke WA Sekretaris OMK"</strong> (${sekre.name}).`,
+                    needsChairmanWa: false
+                };
+            }
+            if (lower.includes('gabung') || lower.includes('daftar') || lower.includes('anggota') || lower.includes('syarat')) {
+                return {
+                    reply: `🙋 <strong>Bergabung Menjadi Anggota OMK:</strong><br>Terbuka untuk seluruh kaum muda Katolik berusia <strong>13–35 tahun</strong> (belum menikah) di Paroki Kristus Raja. Silakan datang langsung saat kumpul rutin Sabtu sore atau sapa Ketua OMK kami!`,
+                    needsChairmanWa: true
+                };
+            }
+            if (lower.includes('lokasi') || lower.includes('alamat') || lower.includes('dimana') || lower.includes('tempat')) {
+                return {
+                    reply: `📍 <strong>Lokasi Gereja & Sekretariat OMK:</strong><br>${appState.profile.address}`,
+                    needsChairmanWa: false
+                };
+            }
+            if (lower.includes('kontak') || lower.includes('nomor') || lower.includes('ketua') || lower.includes('sekretaris') || lower.includes('bendahara')) {
+                return {
+                    reply: `📞 <strong>Kontak Pengurus Inti OMK:</strong><br>• Ketua: ${ketua.name} (+${ketua.wa})<br>• Sekretaris: ${sekre.name} (+${sekre.wa})<br>• Bendahara: ${appState.contacts.bendahara.name} (+${appState.contacts.bendahara.wa})`,
+                    needsChairmanWa: true
+                };
+            }
+
+            return {
+                reply: `Terima kasih atas pertanyaannya! Saat ini Asisten AI belum memiliki informasi spesifik mengenai hal tersebut. Agar mendapatkan jawaban yang tepat dan personal, silakan langsung terhubung dengan <strong>Ketua OMK (${ketua.name})</strong> melalui tombol WhatsApp di bawah ini:`,
+                needsChairmanWa: true
+            };
+        }
+
+        function appendChatBubble(text, sender, showChairmanButton = false, originalQuestion = '') {
+            const container = document.getElementById('ai-chat-messages');
+            const wrapper = document.createElement('div');
+
+            if (sender === 'user') {
+                wrapper.className = "flex justify-end";
+                wrapper.innerHTML = `<div class="bg-amber-500 text-slate-950 font-medium px-4 py-2.5 rounded-2xl rounded-tr-none max-w-[82%] shadow-sm">${text}</div>`;
+            } else {
+                const ketua = appState.contacts.ketua;
+                const cleanWa = ketua.wa.replace(/[^0-9]/g, '');
+                const waUrl = `https://wa.me/${cleanWa}?text=${encodeURIComponent(`Shalom Kak ${ketua.name} (Ketua OMK Kristus Raja), saya bertanya di website OMK mengenai: "${originalQuestion}". Mohon informasinya, terima kasih!`)}`;
+
+                const waBtnHtml = showChairmanButton
+                    ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="mt-2.5 w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow transition">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>Tanya Langsung ke WA Ketua OMK</span>
+                       </a>`
+                    : `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:underline">
+                        <span>Butuh info lanjut? Hubungi WA Ketua OMK →</span>
+                       </a>`;
+
+                wrapper.className = "flex justify-start";
+                wrapper.innerHTML = `
+                    <div class="bg-white text-slate-700 p-3.5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm max-w-[88%] leading-relaxed">
+                        <div>${text}</div>
+                        ${waBtnHtml}
+                    </div>
+                `;
+            }
+
+            container.appendChild(wrapper);
+            container.scrollTop = container.scrollHeight;
+            lucide.createIcons();
+        }
+
+        // =====================================================================
+        // MODE PENGURUS (EDITABLE LANGSUNG DARI HANDPHONE)
+        // =====================================================================
+        function handleAdminButtonClick() {
+            if (isAdminMode) {
+                openAdminDrawer();
+            } else {
+                document.getElementById('admin-pin-input').value = '';
+                openModal('admin-login-modal');
+            }
+        }
+
+        function verifyAdminPin(e) {
+            e.preventDefault();
+            const entered = document.getElementById('admin-pin-input').value.trim();
+            if (entered === appState.adminPin) {
+                isAdminMode = true;
+                closeModal('admin-login-modal');
+                updateAdminVisibility();
+                openAdminDrawer();
+                showToast("Berhasil masuk Mode Pengurus!");
+            } else {
+                showToast("PIN salah! Gunakan PIN default: 1234", "error");
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminMode = false;
+            updateAdminVisibility();
+            showToast("Keluar dari Mode Pengurus.");
+        }
+
+        function updateAdminVisibility() {
+            const bar = document.getElementById('admin-active-bar');
+            const label = document.getElementById('admin-btn-label');
+            document.querySelectorAll('.admin-only').forEach(el => {
+                if (isAdminMode) {
+                    el.classList.remove('hidden');
+                    el.classList.add('flex');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                }
+            });
+
+            if (isAdminMode) {
+                bar.classList.remove('hidden');
+                label.textContent = "Kelola OMK";
+            } else {
+                bar.classList.add('hidden');
+                label.textContent = "Mode Edit";
+            }
+        }
+
+        function openAdminDrawer() {
+            document.getElementById('edit-music-title').value = appState.media.musicTitle || "Nyalakan Apimu - Lagu Rohani";
+
+            document.getElementById('edit-ketua-name').value = appState.contacts.ketua.name;
+            document.getElementById('edit-ketua-wa').value = appState.contacts.ketua.wa;
+            document.getElementById('edit-sekre-name').value = appState.contacts.sekretariat.name;
+            document.getElementById('edit-sekre-wa').value = appState.contacts.sekretariat.wa;
+            document.getElementById('edit-bendahara-name').value = appState.contacts.bendahara.name;
+            document.getElementById('edit-bendahara-wa').value = appState.contacts.bendahara.wa;
+
+            document.getElementById('edit-about-desc').value = appState.profile.aboutDesc;
+            document.getElementById('edit-church-address').value = appState.profile.address;
+            document.getElementById('edit-omk-schedule').value = appState.profile.schedule;
+            document.getElementById('edit-admin-pin').value = appState.adminPin;
+
+            renderInboxCounters();
+            openModal('admin-drawer-modal');
+            lucide.createIcons();
+        }
+
+        function switchAdminTab(tabName) {
+            ['inbox', 'media', 'contacts', 'profile'].forEach(t => {
+                const panel = document.getElementById(`admin-tab-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (!panel || !btn) return;
+                if (t === tabName) {
+                    panel.classList.remove('hidden');
+                    btn.className = "admin-tab-btn px-3.5 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold bg-white text-blue-700 border-t border-x border-slate-200 whitespace-nowrap";
+                } else {
+                    panel.classList.add('hidden');
+                    btn.className = "admin-tab-btn px-3.5 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 whitespace-nowrap";
+                }
+            });
+        }
+
+        async function saveMediaAndMusic(e) {
+            e.preventDefault();
+            const heroFile = document.getElementById('edit-hero-bg-file').files[0];
+            const aboutFile = document.getElementById('edit-about-img-file').files[0];
+            const musicFile = document.getElementById('edit-music-file').files[0];
+            const musicTitle = document.getElementById('edit-music-title').value.trim();
+
+            if (musicTitle) {
+                appState.media.musicTitle = musicTitle;
+            }
+
+            try {
+                if (heroFile) {
+                    appState.media.heroBg = await compressImageFile(heroFile, 1280);
+                }
+                if (aboutFile) {
+                    appState.media.aboutImg = await compressImageFile(aboutFile, 900);
+                }
+                if (musicFile) {
+                    if (musicFile.size > 3.5 * 1024 * 1024) {
+                        showToast("Ukuran file audio maksimal 3.5 MB agar tersimpan di browser HP.", "warning");
+                        return;
+                    }
+                    const audioDataUrl = await new Promise((resolve, reject) => {
+                        const r = new FileReader();
+                        r.onload = ev => resolve(ev.target.result);
+                        r.onerror = reject;
+                        r.readAsDataURL(musicFile);
+                    });
+                    appState.media.customAudioDataUrl = audioDataUrl;
+                    stopBacksound();
+                }
+
+                saveAppState();
+                document.getElementById('edit-hero-bg-file').value = "";
+                document.getElementById('edit-about-img-file').value = "";
+                document.getElementById('edit-music-file').value = "";
+                showToast("Gambar latar & pengaturan lagu rohani berhasil diperbarui!");
+            } catch (err) {
+                showToast("Gagal memproses file. Pastikan format gambar/audio valid.", "error");
+            }
+        }
+
+        function resetToDefaultState() {
+            stopBacksound();
+            try {
+                localStorage.removeItem('omk_kristus_raja_state_v2');
+            } catch (e) {}
+            appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+            saveAppState();
+            closeModal('admin-drawer-modal');
+            showToast("Website berhasil dikembalikan ke pengaturan awal.");
+        }
+
+        function saveContactsAndQris(e) {
+            e.preventDefault();
+            appState.contacts.ketua.name = document.getElementById('edit-ketua-name').value.trim();
+            appState.contacts.ketua.wa = document.getElementById('edit-ketua-wa').value.trim();
+            appState.contacts.sekretariat.name = document.getElementById('edit-sekre-name').value.trim();
+            appState.contacts.sekretariat.wa = document.getElementById('edit-sekre-wa').value.trim();
+            appState.contacts.bendahara.name = document.getElementById('edit-bendahara-name').value.trim();
+            appState.contacts.bendahara.wa = document.getElementById('edit-bendahara-wa').value.trim();
+
+            const qrisFile = document.getElementById('edit-qris-file').files[0];
+            if (qrisFile) {
+                compressImageFile(qrisFile, 600).then(dataUrl => {
+                    appState.qrisCustomDataUrl = dataUrl;
+                    saveAppState();
+                    showToast("Kontak pengurus & gambar QRIS diperbarui!");
+                });
+            } else {
+                saveAppState();
+                showToast("Kontak pengurus berhasil diperbarui!");
+            }
+        }
+
+        function saveProfileAndLocation(e) {
+            e.preventDefault();
+            appState.profile.aboutDesc = document.getElementById('edit-about-desc').value.trim();
+            appState.profile.address = document.getElementById('edit-church-address').value.trim();
+            appState.profile.schedule = document.getElementById('edit-omk-schedule').value.trim();
+            const newPin = document.getElementById('edit-admin-pin').value.trim();
+            if (newPin.length >= 4) {
+                appState.adminPin = newPin;
+            }
+            saveAppState();
+            showToast("Profil & lokasi gereja diperbarui!");
+        }
+
+        // CRUD Project Donasi
+        function openProjectFormModal(projectId = null) {
+            const modalTitle = document.getElementById('project-form-modal-title');
+            document.getElementById('proj-image-input').value = "";
+            if (projectId) {
+                const proj = appState.projects.find(p => p.id === projectId);
+                if (!proj) return;
+                modalTitle.textContent = "Edit Project & Foto";
+                document.getElementById('proj-id-input').value = proj.id;
+                document.getElementById('proj-title-input').value = proj.title;
+                document.getElementById('proj-badge-input').value = proj.badge;
+                document.getElementById('proj-desc-input').value = proj.desc;
+                document.getElementById('proj-collected-input').value = proj.collected;
+                document.getElementById('proj-target-input').value = proj.target;
+            } else {
+                modalTitle.textContent = "Tambah Project Baru";
+                document.getElementById('proj-id-input').value = "";
+                document.getElementById('proj-title-input').value = "";
+                document.getElementById('proj-badge-input').value = "Aksi Sosial";
+                document.getElementById('proj-desc-input').value = "";
+                document.getElementById('proj-collected-input').value = 0;
+                document.getElementById('proj-target-input').value = 5000000;
+            }
+            openModal('project-form-modal');
+        }
+
+        async function saveProjectForm(e) {
+            e.preventDefault();
+            const id = document.getElementById('proj-id-input').value;
+            const title = document.getElementById('proj-title-input').value.trim();
+            const badge = document.getElementById('proj-badge-input').value.trim() || "Project OMK";
+            const desc = document.getElementById('proj-desc-input').value.trim();
+            const collected = Number(document.getElementById('proj-collected-input').value) || 0;
+            const target = Number(document.getElementById('proj-target-input').value) || 1000000;
+            const imageFile = document.getElementById('proj-image-input').files[0];
+
+            let uploadedImageUrl = null;
+            if (imageFile) {
+                uploadedImageUrl = await compressImageFile(imageFile, 900);
+            }
+
+            if (id) {
+                const idx = appState.projects.findIndex(p => p.id === id);
+                if (idx !== -1) {
+                    const existingImg = appState.projects[idx].image;
+                    appState.projects[idx] = {
+                        id,
+                        title,
+                        badge,
+                        desc,
+                        image: uploadedImageUrl || existingImg,
+                        collected,
+                        target
+                    };
+                }
+                showToast("Project & foto berhasil diperbarui!");
+            } else {
+                appState.projects.push({
+                    id: 'proj-' + Date.now(),
+                    title,
+                    badge,
+                    desc,
+                    image: uploadedImageUrl || "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80",
+                    collected,
+                    target
+                });
+                showToast("Project baru berhasil ditambahkan!");
+            }
+
+            saveAppState();
+            closeModal('project-form-modal');
+        }
+
+        function deleteProject(projectId) {
+            appState.projects = appState.projects.filter(p => p.id !== projectId);
+            saveAppState();
+            showToast("Project berhasil dihapus.");
+        }
+
+        // =====================================================================
+        // BACKSOUND AUDIO ENGINE: "NYALAKAN APIMU" (MP3 KUSTOM / TONE.JS SYNTH)
+        // =====================================================================
+        let isMusicPlaying = false;
+        let isMusicMuted = false;
+        let synthLoop = null;
+        let synthPad = null;
+
+        async function toggleBacksound() {
+            if (isMusicPlaying) {
+                stopBacksound();
+            } else {
+                await startBacksound();
+            }
+        }
+
+        async function startBacksound() {
+            const audioEl = document.getElementById('bg-audio-element');
+            const statusText = document.getElementById('music-status-text');
+            const eq = document.getElementById('music-eq');
+            const playIcon = document.getElementById('music-play-icon');
+
+            if (appState.media.customAudioDataUrl) {
+                try {
+                    audioEl.src = appState.media.customAudioDataUrl;
+                    audioEl.muted = isMusicMuted;
+                    await audioEl.play();
+                    isMusicPlaying = true;
+                    statusText.textContent = "Sedang Diputar • MP3 OMK";
+                    eq.classList.add('eq-playing');
+                    playIcon.setAttribute('data-lucide', 'pause');
+                    playIcon.classList.remove('ml-0.5');
+                    lucide.createIcons();
+                    return;
+                } catch (err) {
+                    console.warn("Fallback ke synth rohani:", err);
+                }
+            }
+
+            try {
+                await Tone.start();
+                if (!synthPad) {
+                    const reverb = new Tone.Reverb({ decay: 4, wet: 0.45 }).toDestination();
+                    synthPad = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "sine" },
+                        envelope: { attack: 0.35, decay: 0.4, sustain: 0.5, release: 1.5 }
+                    }).connect(reverb);
+                    synthPad.volume.value = isMusicMuted ? -60 : -12;
+
+                    const melodyNotes = [
+                        { time: "0:0:0", note: ["E4", "C3"], dur: "2n" },
+                        { time: "0:2:0", note: ["G4"], dur: "4n" },
+                        { time: "0:3:0", note: ["A4"], dur: "4n" },
+                        { time: "1:0:0", note: ["G4", "G3"], dur: "2n." },
+                        { time: "1:3:0", note: ["E4"], dur: "4n" },
+                        { time: "2:0:0", note: ["F4", "F3"], dur: "2n" },
+                        { time: "2:2:0", note: ["A4"], dur: "4n" },
+                        { time: "2:3:0", note: ["G4"], dur: "4n" },
+                        { time: "3:0:0", note: ["E4", "C3"], dur: "1m" },
+                        { time: "4:0:0", note: ["D4", "G2"], dur: "2n" },
+                        { time: "4:2:0", note: ["E4"], dur: "4n" },
+                        { time: "4:3:0", note: ["F4"], dur: "4n" },
+                        { time: "5:0:0", note: ["E4", "A2"], dur: "2n" },
+                        { time: "5:2:0", note: ["D4"], dur: "2n" },
+                        { time: "6:0:0", note: ["C4", "C3"], dur: "1m" }
+                    ];
+
+                    synthLoop = new Tone.Part((time, value) => {
+                        synthPad.triggerAttackRelease(value.note, value.dur, time);
+                    }, melodyNotes);
+                    synthLoop.loop = true;
+                    synthLoop.loopEnd = "7m";
+                }
+
+                Tone.Transport.bpm.value = 84;
+                synthLoop.start(0);
+                Tone.Transport.start();
+
+                isMusicPlaying = true;
+                statusText.textContent = "Sedang Diputar • Instrumental";
+                eq.classList.add('eq-playing');
+                playIcon.setAttribute('data-lucide', 'pause');
+                playIcon.classList.remove('ml-0.5');
+                lucide.createIcons();
+            } catch (e) {
+                showToast("Ketuk tombol Putar sekali lagi untuk mengaktifkan audio.", "info");
+            }
+        }
+
+        function stopBacksound() {
+            const audioEl = document.getElementById('bg-audio-element');
+            const statusText = document.getElementById('music-status-text');
+            const eq = document.getElementById('music-eq');
+            const playIcon = document.getElementById('music-play-icon');
+
+            if (audioEl) audioEl.pause();
+            if (typeof Tone !== 'undefined' && Tone.Transport.state === 'started') {
+                Tone.Transport.pause();
+            }
+
+            isMusicPlaying = false;
+            statusText.textContent = "Dijeda • Lagu Rohani";
+            eq.classList.remove('eq-playing');
+            playIcon.setAttribute('data-lucide', 'play');
+            playIcon.classList.add('ml-0.5');
+            lucide.createIcons();
+        }
+
+        function toggleMuteBacksound() {
+            isMusicMuted = !isMusicMuted;
+            const audioEl = document.getElementById('bg-audio-element');
+            const volIcon = document.getElementById('music-vol-icon');
+
+            if (audioEl) audioEl.muted = isMusicMuted;
+            if (synthPad) synthPad.volume.value = isMusicMuted ? -60 : -12;
+
+            volIcon.setAttribute('data-lucide', isMusicMuted ? 'volume-x' : 'volume-2');
+            lucide.createIcons();
+        }
+
+        // =====================================================================
+        // MODAL & NAVIGATION HELPERS
+        // =====================================================================
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+        });
+    </script>
+</body>
+</html>
